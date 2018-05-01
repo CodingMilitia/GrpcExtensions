@@ -6,7 +6,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    public static class ServiceCollectionExtensions
+    public static class AddGrpcServerServiceCollectionExtensions
     {
         public static IServiceCollection AddGrpcServer(this IServiceCollection serviceCollection, Server server)
         {

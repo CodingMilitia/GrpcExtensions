@@ -7,7 +7,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddScopedExecutor<TService>(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddSingleton<IScopedExecutor<TService>, ScopedExecutor<TService>>();
+            serviceCollection.AddSingleton<IScopedExecutor, ScopedExecutor>();
             return serviceCollection;
         }
     }

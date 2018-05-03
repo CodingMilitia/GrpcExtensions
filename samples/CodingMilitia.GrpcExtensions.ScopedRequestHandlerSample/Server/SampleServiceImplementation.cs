@@ -7,16 +7,16 @@ namespace CodingMilitia.GrpcExtensions.ScopedRequestHandlerSample.Server
 {
     public class SampleServiceImplementation : SampleServiceBase
     {
-        private readonly IScopedExecutor<ISampleServiceLogic> _scopedExecutor;
+        private readonly IScopedExecutor _scopedExecutor;
 
-        public SampleServiceImplementation(IScopedExecutor<ISampleServiceLogic> scopedExecutor)
+        public SampleServiceImplementation(IScopedExecutor scopedExecutor)
         {
             _scopedExecutor = scopedExecutor;
         }
         
         public override async Task<Generated.SampleResponse> Send(Generated.SampleRequest request, ServerCallContext context)
         {
-            return await _scopedExecutor.ExecuteAsync(async (service) =>
+            return await _scopedExecutor.ExecuteAsync<ISampleServiceLogic, Generated.SampleResponse>(async (service) =>
             {
                 var response = await service.SendAsync(
                     request.ToInternalRequest(),

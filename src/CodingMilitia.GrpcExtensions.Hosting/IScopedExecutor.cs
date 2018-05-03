@@ -3,14 +3,14 @@ using System.Threading.Tasks;
 
 namespace CodingMilitia.GrpcExtensions.Hosting
 {
-    public interface IScopedExecutor<TService>
+    public interface IScopedExecutor
     {
-        void Execute(Action<TService> handler);
+        void Execute<TService>(Action<TService> handler);
 
-        TResult Execute<TResult>(Func<TService, TResult> handler);
+        TResult Execute<TService, TResult>(Func<TService, TResult> handler);
 
-        Task ExecuteAsync(Func<TService, Task> handler);
+        Task ExecuteAsync<TService>(Func<TService, Task> handler);
 
-        Task<TResult> ExecuteAsync<TResult>(Func<TService, Task<TResult>> handler);
+        Task<TResult> ExecuteAsync<TService, TResult>(Func<TService, Task<TResult>> handler);
     }
 }

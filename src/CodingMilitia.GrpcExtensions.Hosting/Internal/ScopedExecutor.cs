@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace CodingMilitia.GrpcExtensions.Hosting.Internal
 {
-    internal class ScopedExecutor<TService> : IScopedExecutor<TService>
+    internal class ScopedExecutor : IScopedExecutor
     {
         private readonly IServiceProvider _appServices;
 
@@ -13,7 +13,7 @@ namespace CodingMilitia.GrpcExtensions.Hosting.Internal
             _appServices = appServices ?? throw new ArgumentNullException(paramName: nameof(appServices));
         }
 
-        public void Execute(Action<TService> handler)
+        public void Execute<TService>(Action<TService> handler)
         {
             using (var scope = _appServices.CreateScope())
             {
@@ -22,7 +22,7 @@ namespace CodingMilitia.GrpcExtensions.Hosting.Internal
             }
         }
 
-        public TResult Execute<TResult>(Func<TService, TResult> handler)
+        public TResult Execute<TService, TResult>(Func<TService, TResult> handler)
         {
             using (var scope = _appServices.CreateScope())
             {
@@ -31,7 +31,7 @@ namespace CodingMilitia.GrpcExtensions.Hosting.Internal
             }
         }
 
-        public async Task ExecuteAsync(Func<TService, Task> handler)
+        public async Task ExecuteAsync<TService>(Func<TService, Task> handler)
         {
             using (var scope = _appServices.CreateScope())
             {
@@ -40,7 +40,7 @@ namespace CodingMilitia.GrpcExtensions.Hosting.Internal
             }
         }
 
-        public async Task<TResult> ExecuteAsync<TResult>(Func<TService, Task<TResult>> handler)
+        public async Task<TResult> ExecuteAsync<TService, TResult>(Func<TService, Task<TResult>> handler)
         {
             using (var scope = _appServices.CreateScope())
             {

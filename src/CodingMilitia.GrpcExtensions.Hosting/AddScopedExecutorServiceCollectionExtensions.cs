@@ -7,6 +7,11 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddScopedExecutor<TService>(this IServiceCollection serviceCollection)
         {
+            if (serviceCollection == null)
+            {
+                throw new System.ArgumentNullException(nameof(serviceCollection));
+            }
+
             serviceCollection.AddSingleton<IScopedExecutor<TService>, ScopedExecutor<TService>>();
             return serviceCollection;
         }

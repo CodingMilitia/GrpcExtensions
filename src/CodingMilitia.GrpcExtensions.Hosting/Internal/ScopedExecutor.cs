@@ -6,16 +6,21 @@ namespace CodingMilitia.GrpcExtensions.Hosting.Internal
 {
     internal class ScopedExecutor<TService> : IScopedExecutor<TService>
     {
-        private readonly IServiceProvider _appServices;
+        private readonly IServiceScopeFactory _scopeFactory;
 
-        public ScopedExecutor(IServiceProvider appServices)
+        public ScopedExecutor(IServiceScopeFactory scopeFactory)
         {
-            _appServices = appServices ?? throw new ArgumentNullException(paramName: nameof(appServices));
+            _scopeFactory = scopeFactory ?? throw new ArgumentNullException(paramName: nameof(scopeFactory));
         }
 
         public void Execute(Action<TService> handler)
         {
-            using (var scope = _appServices.CreateScope())
+            if (handler == null)
+            {
+                throw new ArgumentNullException(nameof(handler));
+            }
+
+            using (var scope = _scopeFactory.CreateScope())
             {
                 var service = scope.ServiceProvider.GetRequiredService<TService>();
                 handler(service);
@@ -24,7 +29,12 @@ namespace CodingMilitia.GrpcExtensions.Hosting.Internal
 
         public TResult Execute<TResult>(Func<TService, TResult> handler)
         {
-            using (var scope = _appServices.CreateScope())
+            if (handler == null)
+            {
+                throw new ArgumentNullException(nameof(handler));
+            }
+
+            using (var scope = _scopeFactory.CreateScope())
             {
                 var service = scope.ServiceProvider.GetRequiredService<TService>();
                 return handler(service);
@@ -33,7 +43,12 @@ namespace CodingMilitia.GrpcExtensions.Hosting.Internal
 
         public async Task ExecuteAsync(Func<TService, Task> handler)
         {
-            using (var scope = _appServices.CreateScope())
+            if (handler == null)
+            {
+                throw new ArgumentNullException(nameof(handler));
+            }
+
+            using (var scope = _scopeFactory.CreateScope())
             {
                 var service = scope.ServiceProvider.GetRequiredService<TService>();
                 await handler(service).ConfigureAwait(false);
@@ -42,7 +57,12 @@ namespace CodingMilitia.GrpcExtensions.Hosting.Internal
 
         public async Task<TResult> ExecuteAsync<TResult>(Func<TService, Task<TResult>> handler)
         {
-            using (var scope = _appServices.CreateScope())
+            if (handler == null)
+            {
+                throw new ArgumentNullException(nameof(handler));
+            }
+
+            using (var scope = _scopeFactory.CreateScope())
             {
                 var service = scope.ServiceProvider.GetRequiredService<TService>();
                 return await handler(service).ConfigureAwait(false);

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using CodingMilitia.GrpcExtensions.Hosting.Internal;
 using Grpc.Core;
 using Microsoft.Extensions.Hosting;
@@ -46,7 +47,6 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public static IServiceCollection AddGrpcServer<TService>(
             this IServiceCollection serviceCollection,
-            Func<TService, ServerServiceDefinition> serviceBinder,
             IEnumerable<ServerPort> ports,
             IEnumerable<ChannelOption> channelOptions = null
         )
@@ -55,11 +55,6 @@ namespace Microsoft.Extensions.DependencyInjection
             if (serviceCollection == null)
             {
                 throw new ArgumentNullException(nameof(serviceCollection));
-            }
-
-            if (serviceBinder == null)
-            {
-                throw new ArgumentNullException(nameof(serviceBinder));
             }
 
             if (ports == null)
@@ -71,6 +66,8 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 throw new InvalidOperationException($"{typeof(TService).Name} is already registered in the container.");
             }
+
+            var serviceBinder = GetServiceBinder<TService>();
 
             serviceCollection.AddSingleton<TService>();
             serviceCollection.AddSingleton(appServices =>
@@ -104,6 +101,35 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 server.Services.Add(service);
             }
+        }
+
+        private static Func<TService, ServerServiceDefinition> GetServiceBinder<TService>()
+        {
+            var serviceType = typeof(TService);
+            var baseServiceType = serviceType.BaseType;
+            var serviceDefinitionType = typeof(ServerServiceDefinition);
+
+            var serviceContainerType = baseServiceType.DeclaringType;
+            var methods = serviceContainerType.GetMethods(BindingFlags.Public | BindingFlags.Static);
+            var binder =
+                (from m in methods
+                 let parameters = m.GetParameters()
+                 where m.Name.Equals("BindService")
+                     && parameters.Length == 1
+                     && parameters.First().ParameterType.Equals(baseServiceType)
+                     && m.ReturnType.Equals(serviceDefinitionType)
+                 select m)
+            .SingleOrDefault();
+
+            if (binder == null)
+            {
+                throw new InvalidOperationException($"Could not find service binder for provided service {serviceType.Name}");
+            }
+
+            var serviceParameter = Expression.Parameter(serviceType);
+            var invocation = Expression.Call(null, binder, new[] { serviceParameter });
+            var func = Expression.Lambda<Func<TService, ServerServiceDefinition>>(invocation, false, new[] { serviceParameter }).Compile();
+            return func;
         }
     }
 }

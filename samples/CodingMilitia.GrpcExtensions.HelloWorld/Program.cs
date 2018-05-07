@@ -17,7 +17,6 @@ namespace CodingMilitia.GrpcExtensions.HelloWorld
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddGrpcServer<SampleServiceImplementation>(
-                        SampleService.BindService, 
                         new []{ new ServerPort("127.0.0.1", 5000, ServerCredentials.Insecure)}
                     );
                 });

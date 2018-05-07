@@ -33,6 +33,10 @@ namespace CodingMilitia.GrpcExtensions.ScopedRequestHandlerSample
                 services
                 .AddScoped<ISampleServiceLogic, RandomSampleServiceLogic>()
                 .AddScopedExecutor()
+                .AddGrpcServer<AnotherSampleServiceImplementation>(
+                    SampleService.BindService,
+                    new[] { new ServerPort("127.0.0.1", 5051, ServerCredentials.Insecure) }
+                )
                 .AddGrpcServer<SampleServiceImplementation>(
                     SampleService.BindService,
                     new[] { new ServerPort("127.0.0.1", 5050, ServerCredentials.Insecure) }

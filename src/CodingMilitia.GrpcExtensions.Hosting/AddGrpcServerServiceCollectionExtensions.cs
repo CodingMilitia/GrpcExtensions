@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using CodingMilitia.GrpcExtensions.Hosting.Internal;
 using Grpc.Core;
 using Microsoft.Extensions.Hosting;
@@ -65,15 +67,21 @@ namespace Microsoft.Extensions.DependencyInjection
                 throw new ArgumentNullException(nameof(ports));
             }
 
+            if (serviceCollection.Any(s => s.ServiceType.Equals(typeof(TService))))
+            {
+                throw new InvalidOperationException($"{typeof(TService).Name} is already registered in the container.");
+            }
+
             serviceCollection.AddSingleton<TService>();
             serviceCollection.AddSingleton(appServices =>
             {
                 var server = channelOptions != null ? new Server(channelOptions) : new Server();
                 server.AddPorts(ports);
                 server.AddServices(serviceBinder(appServices.GetRequiredService<TService>()));
-                return server;
+                return new TypedServerContainer<TService>(server);
             });
-            serviceCollection.AddSingleton<IHostedService, GrpcBackgroundService>();
+
+            serviceCollection.AddSingleton<IHostedService, TypedGrpcBackgroundService<TService>>();
             return serviceCollection;
         }
 

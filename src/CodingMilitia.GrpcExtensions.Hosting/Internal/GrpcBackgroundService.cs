@@ -22,6 +22,11 @@ namespace CodingMilitia.GrpcExtensions.Hosting.Internal
         {
             _logger.LogDebug("Starting gRPC server");
 
+            _logger.LogDebug(
+                "Trying to listen on: {hostingEndpoints}",
+                string.Join("; ", _server.Ports.Select(p => $"{p.Host}:{p.BoundPort}"))
+            );
+
             _server.Start();
 
             _logger.LogDebug(

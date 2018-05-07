@@ -16,7 +16,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             if (serviceCollection.Any(s => s.ServiceType.Equals(typeof(IScopedExecutor)) && s.ImplementationType.Equals(typeof(ScopedExecutor))))
             {
-                throw new InvalidOperationException("ScopedExecutor already registered");
+                throw new InvalidOperationException("ScopedExecutor already registered.");
             }
 
             serviceCollection.AddSingleton<IScopedExecutor, ScopedExecutor>();

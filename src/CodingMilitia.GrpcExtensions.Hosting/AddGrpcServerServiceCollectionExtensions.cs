@@ -24,7 +24,7 @@ namespace Microsoft.Extensions.DependencyInjection
             }
 
             serviceCollection.AddSingleton(server);
-            serviceCollection.AddSingleton<IHostedService, GrpcBackgroundService>();
+            serviceCollection.AddGrpcBackgroundServiceIfNotAlreadyRegistered();
             return serviceCollection;
         }
 
@@ -41,7 +41,7 @@ namespace Microsoft.Extensions.DependencyInjection
             }
 
             serviceCollection.AddSingleton(serverFactory);
-            serviceCollection.AddSingleton<IHostedService, GrpcBackgroundService>();
+            serviceCollection.AddGrpcBackgroundServiceIfNotAlreadyRegistered();
             return serviceCollection;
         }
 
@@ -75,10 +75,10 @@ namespace Microsoft.Extensions.DependencyInjection
                 var server = channelOptions != null ? new Server(channelOptions) : new Server();
                 server.AddPorts(ports);
                 server.AddServices(serviceBinder(appServices.GetRequiredService<TService>()));
-                return new TypedServerContainer<TService>(server);
+                return server;
             });
 
-            serviceCollection.AddSingleton<IHostedService, TypedGrpcBackgroundService<TService>>();
+            serviceCollection.AddGrpcBackgroundServiceIfNotAlreadyRegistered();
             return serviceCollection;
         }
 
@@ -130,6 +130,15 @@ namespace Microsoft.Extensions.DependencyInjection
             var invocation = Expression.Call(null, binder, new[] { serviceParameter });
             var func = Expression.Lambda<Func<TService, ServerServiceDefinition>>(invocation, false, new[] { serviceParameter }).Compile();
             return func;
+        }
+
+
+        private static void AddGrpcBackgroundServiceIfNotAlreadyRegistered(this IServiceCollection serviceCollection)
+        {
+            if (!serviceCollection.Any(s => s.ServiceType.Equals(typeof(IHostedService)) && s.ImplementationType.Equals(typeof(GrpcBackgroundService))))
+            {
+                serviceCollection.AddSingleton<IHostedService, GrpcBackgroundService>();
+            }
         }
     }
 }

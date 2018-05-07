@@ -13,15 +13,12 @@ namespace CodingMilitia.GrpcExtensions.ScopedRequestHandlerSample.Server
         {
             _scopedExecutor = scopedExecutor;
         }
-        
+
         public override async Task<Generated.SampleResponse> Send(Generated.SampleRequest request, ServerCallContext context)
         {
             return await _scopedExecutor.ExecuteAsync<ISampleServiceLogic, Generated.SampleResponse>(async (service) =>
             {
-                var response = await service.SendAsync(
-                    request.ToInternalRequest(),
-                    context.CancellationToken
-                );
+                var response = await service.SendAsync(request.ToInternalRequest(), context.CancellationToken);
                 return response.ToExternalResponse();
             });
         }

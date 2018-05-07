@@ -1,29 +1,28 @@
 using System.Threading.Tasks;
 using CodingMilitia.GrpcExtensions.Hosting;
 using Grpc.Core;
+using Microsoft.Extensions.DependencyInjection;
 using static CodingMilitia.GrpcExtensions.ScopedRequestHandlerSample.Generated.SampleService;
 
 namespace CodingMilitia.GrpcExtensions.ScopedRequestHandlerSample.Server
 {
     public class AnotherSampleServiceImplementation : SampleServiceBase
     {
-        private readonly IScopedExecutor _scopedExecutor;
+        private readonly IServiceScopeFactory _scopeFactory;
 
-        public AnotherSampleServiceImplementation(IScopedExecutor scopedExecutor)
+        public AnotherSampleServiceImplementation(IServiceScopeFactory scopeFactory)
         {
-            _scopedExecutor = scopedExecutor;
+            _scopeFactory = scopeFactory;
         }
-        
+
         public override async Task<Generated.SampleResponse> Send(Generated.SampleRequest request, ServerCallContext context)
         {
-            return await _scopedExecutor.ExecuteAsync<ISampleServiceLogic, Generated.SampleResponse>(async (service) =>
+            using (var scope = _scopeFactory.CreateScope())
             {
-                var response = await service.SendAsync(
-                    request.ToInternalRequest(),
-                    context.CancellationToken
-                );
+                var service = scope.ServiceProvider.GetRequiredService<ISampleServiceLogic>();
+                var response = await service.SendAsync(request.ToInternalRequest(), context.CancellationToken);
                 return response.ToExternalResponse();
-            });
+            }
         }
     }
 }

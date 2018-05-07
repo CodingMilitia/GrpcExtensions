@@ -33,12 +33,22 @@ namespace CodingMilitia.GrpcExtensions.ScopedRequestHandlerSample
                 services
                 .AddScoped<ISampleServiceLogic, RandomSampleServiceLogic>()
                 .AddScopedExecutor()
-                .AddGrpcServer<AnotherSampleServiceImplementation>(
-                    new[] { new ServerPort("127.0.0.1", 5051, ServerCredentials.Insecure) }
-                )
+                //the most "magic" solution
                 .AddGrpcServer<SampleServiceImplementation>(
                     new[] { new ServerPort("127.0.0.1", 5050, ServerCredentials.Insecure) }
-                );
+                )
+                //a more manual solution if the flexibility is required
+                //also not using the IScopedExecutor (although it could) for a more traditional example
+                .AddGrpcServer(appServices =>
+                {
+                    var scopeFactory = appServices.GetRequiredService<IServiceScopeFactory>();
+                    var server = new Grpc.Core.Server
+                    {
+                        Services = { SampleService.BindService(new AnotherSampleServiceImplementation(scopeFactory)) },
+                        Ports = { new ServerPort("localhost", 5051, ServerCredentials.Insecure) }
+                    };
+                    return server;
+                });
             });
 
             await serverHostBuilder.RunConsoleAsync();

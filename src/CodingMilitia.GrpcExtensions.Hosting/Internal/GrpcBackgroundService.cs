@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,41 +10,55 @@ namespace CodingMilitia.GrpcExtensions.Hosting.Internal
 {
     internal class GrpcBackgroundService : IHostedService
     {
-        private readonly Server _server;
+        private readonly IEnumerable<Server> _servers;
         private readonly ILogger<GrpcBackgroundService> _logger;
 
-        public GrpcBackgroundService(Server server, ILogger<GrpcBackgroundService> logger)
+        public GrpcBackgroundService(IEnumerable<Server> servers, ILogger<GrpcBackgroundService> logger)
         {
-            _server = server;
+            _servers = servers;
             _logger = logger;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            _logger.LogDebug("Starting gRPC server");
+            _logger.LogDebug("Starting gRPC background service");
 
-            _logger.LogDebug(
-                "Trying to listen on: {hostingEndpoints}",
-                string.Join("; ", _server.Ports.Select(p => $"{p.Host}:{p.BoundPort}"))
-            );
+            foreach(var server in _servers)
+            {
+                StartServer(server);
+            }
 
-            _server.Start();
-
-            _logger.LogDebug(
-                "Listening on: {hostingEndpoints}",
-                string.Join("; ", _server.Ports.Select(p => $"{p.Host}:{p.BoundPort}"))
-            );
+            _logger.LogDebug("gRPC background service started");
 
             return Task.CompletedTask;
         }
 
+
+
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            _logger.LogDebug("Stopping gRPC server");
+            _logger.LogDebug("Stopping gRPC background service");
 
-            await _server.ShutdownAsync();
+            var shutdownTasks = _servers.Select(server => server.ShutdownAsync()).ToList();
             
-            _logger.LogDebug("gRPC server stopped");
+            await Task.WhenAll(shutdownTasks).ConfigureAwait(false);
+
+            _logger.LogDebug("gRPC background service stopped");
+        }
+
+        private void StartServer(Server server)
+        {
+            _logger.LogDebug(
+                "Starting gRPC server listening on: {hostingEndpoints}",
+                string.Join("; ", server.Ports.Select(p => $"{p.Host}:{p.BoundPort}"))
+            );
+
+            server.Start();
+
+            _logger.LogDebug(
+                "Started gRPC server listening on: {hostingEndpoints}",
+                string.Join("; ", server.Ports.Select(p => $"{p.Host}:{p.BoundPort}"))
+            );
         }
     }
 }

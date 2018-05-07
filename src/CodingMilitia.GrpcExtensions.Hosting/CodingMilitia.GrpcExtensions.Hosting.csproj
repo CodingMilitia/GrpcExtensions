@@ -6,8 +6,8 @@
 
   <ItemGroup>
     <PackageReference Include="Grpc" Version="1.11.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.0-preview2-final" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="2.1.0-preview2-final" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.0-rc1-final" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="2.1.0-rc1-final" />
   </ItemGroup>
 
 </Project>

@@ -10,6 +10,16 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddGrpcServer(this IServiceCollection serviceCollection, Server server)
         {
+            if (serviceCollection == null)
+            {
+                throw new ArgumentNullException(nameof(serviceCollection));
+            }
+
+            if (server == null)
+            {
+                throw new ArgumentNullException(nameof(server));
+            }
+
             serviceCollection.AddSingleton(server);
             serviceCollection.AddSingleton<IHostedService, GrpcBackgroundService>();
             return serviceCollection;
@@ -17,6 +27,16 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public static IServiceCollection AddGrpcServer(this IServiceCollection serviceCollection, Func<IServiceProvider, Server> serverFactory)
         {
+            if (serviceCollection == null)
+            {
+                throw new ArgumentNullException(nameof(serviceCollection));
+            }
+
+            if (serverFactory == null)
+            {
+                throw new ArgumentNullException(nameof(serverFactory));
+            }
+
             serviceCollection.AddSingleton(serverFactory);
             serviceCollection.AddSingleton<IHostedService, GrpcBackgroundService>();
             return serviceCollection;
@@ -30,6 +50,21 @@ namespace Microsoft.Extensions.DependencyInjection
         )
             where TService : class
         {
+            if (serviceCollection == null)
+            {
+                throw new ArgumentNullException(nameof(serviceCollection));
+            }
+
+            if (serviceBinder == null)
+            {
+                throw new ArgumentNullException(nameof(serviceBinder));
+            }
+
+            if (ports == null)
+            {
+                throw new ArgumentNullException(nameof(ports));
+            }
+
             serviceCollection.AddSingleton<TService>();
             serviceCollection.AddSingleton(appServices =>
             {

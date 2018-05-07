@@ -15,6 +15,11 @@ namespace CodingMilitia.GrpcExtensions.Hosting.Internal
 
         public void Execute<TService>(Action<TService> handler)
         {
+            if (handler == null)
+            {
+                throw new ArgumentNullException(nameof(handler));
+            }
+
             using (var scope = _scopeFactory.CreateScope())
             {
                 var service = scope.ServiceProvider.GetRequiredService<TService>();
@@ -24,6 +29,11 @@ namespace CodingMilitia.GrpcExtensions.Hosting.Internal
 
         public TResult Execute<TService, TResult>(Func<TService, TResult> handler)
         {
+            if (handler == null)
+            {
+                throw new ArgumentNullException(nameof(handler));
+            }
+
             using (var scope = _scopeFactory.CreateScope())
             {
                 var service = scope.ServiceProvider.GetRequiredService<TService>();
@@ -33,6 +43,11 @@ namespace CodingMilitia.GrpcExtensions.Hosting.Internal
 
         public async Task ExecuteAsync<TService>(Func<TService, Task> handler)
         {
+            if (handler == null)
+            {
+                throw new ArgumentNullException(nameof(handler));
+            }
+
             using (var scope = _scopeFactory.CreateScope())
             {
                 var service = scope.ServiceProvider.GetRequiredService<TService>();
@@ -42,6 +57,11 @@ namespace CodingMilitia.GrpcExtensions.Hosting.Internal
 
         public async Task<TResult> ExecuteAsync<TService, TResult>(Func<TService, Task<TResult>> handler)
         {
+            if (handler == null)
+            {
+                throw new ArgumentNullException(nameof(handler));
+            }
+
             using (var scope = _scopeFactory.CreateScope())
             {
                 var service = scope.ServiceProvider.GetRequiredService<TService>();

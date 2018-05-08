@@ -45,7 +45,7 @@ namespace CodingMilitia.GrpcExtensions.ScopedRequestHandlerSample
                     var server = new Grpc.Core.Server
                     {
                         Services = { SampleService.BindService(new AnotherSampleServiceImplementation(scopeFactory)) },
-                        Ports = { new ServerPort("localhost", 5051, ServerCredentials.Insecure) }
+                        Ports = { new ServerPort("127.0.0.1", 5051, ServerCredentials.Insecure) }
                     };
                     return server;
                 });

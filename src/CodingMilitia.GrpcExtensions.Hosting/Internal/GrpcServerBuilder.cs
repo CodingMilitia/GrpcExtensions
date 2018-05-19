@@ -64,7 +64,7 @@ namespace CodingMilitia.GrpcExtensions.Hosting.Internal
 
             _serviceCollection.AddSingleton(appServices =>
            {
-               var server = _channelOptions != null && _channelOptions.Count() > 0 ? new Server(_channelOptions) : new Server();
+               var server = _channelOptions.Count() > 0 ? new Server(_channelOptions) : new Server();
                server.AddPorts(_ports);
                foreach (var serviceDefinition in _registrationInfo)
                {

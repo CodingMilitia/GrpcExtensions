@@ -17,7 +17,7 @@ namespace CodingMilitia.GrpcExtensions.Tests
         {
             _server = new Server
             {
-                Services = { BindService(new EchoValueServiceImplementation()) },
+                Services = { BindService(new DumbPipeServiceImplementation(new EchoValueService())) },
                 Ports = { new ServerPort("127.0.0.1", 1234, ServerCredentials.Insecure) }
             };
             _server.Start();

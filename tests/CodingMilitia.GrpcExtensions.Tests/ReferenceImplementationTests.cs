@@ -21,7 +21,7 @@ namespace CodingMilitia.GrpcExtensions.Tests
                 Ports = { new ServerPort(TestHelpers.Host, TestHelpers.Port, TestHelpers.Credentials) }
             };
             _server.Start();
-            _client = new SampleServiceClient(new Channel(TestHelpers.HostAddress, TestHelpers.Credentials));
+            _client = new SampleServiceClient(new Channel(TestHelpers.HostAddress, TestHelpers.ClientCredentials));
         }
 
 

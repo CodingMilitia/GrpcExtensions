@@ -11,32 +11,35 @@ using static CodingMilitia.GrpcExtensions.Tests.Generated.SampleService;
 
 namespace CodingMilitia.GrpcExtensions.Tests
 {
-    public class PreConfiguredServerTests : IDisposable
+    public class PreConfiguredServerFactoryTests : IDisposable
     {
-        private readonly Server _server;
+        private readonly Func<IServiceProvider, Server> _serverFactory;
         private readonly Channel _channel;
         private readonly SampleServiceClient _client;
 
-        public PreConfiguredServerTests()
+        public PreConfiguredServerFactoryTests()
         {
             var testRunValues = new TestRunValues();
-            _server = new Server
+            _serverFactory = _ =>
             {
-                Services = { BindService(new DumbPipeServiceImplementation(new EchoValueService())) },
-                Ports = { new ServerPort(testRunValues.Host, testRunValues.Port, testRunValues.ServerCredentials) }
+                return new Server
+                {
+                    Services = { BindService(new DumbPipeServiceImplementation(new EchoValueService())) },
+                    Ports = { new ServerPort(testRunValues.Host, testRunValues.Port, testRunValues.ServerCredentials) }
+                };
             };
             _channel = new Channel(testRunValues.HostAddress, testRunValues.ClientCredentials);
             _client = new SampleServiceClient(_channel);
         }
 
         [Fact]
-        public async Task AddingAPreConfiguredServerHostsAndHandlesRequests()
+        public async Task AddingAPreConfiguredServerFactoryHostsAndHandlesRequests()
         {
             //arrange
             var serverHostBuilder = new HostBuilder()
                .ConfigureServices((hostContext, services) =>
                {
-                   services.AddGrpcServer(_server);
+                   services.AddGrpcServer(_serverFactory);
                });
 
             var cts = new CancellationTokenSource();

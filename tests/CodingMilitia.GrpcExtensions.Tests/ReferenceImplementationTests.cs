@@ -11,17 +11,20 @@ namespace CodingMilitia.GrpcExtensions.Tests
     public class ReferenceImplementationTests : IDisposable
     {
         private readonly Server _server;
+        private readonly Channel _channel;
         private readonly SampleServiceClient _client;
 
         public ReferenceImplementationTests()
         {
+            var testRunValues = new TestRunValues();
             _server = new Server
             {
                 Services = { BindService(new DumbPipeServiceImplementation(new EchoValueService())) },
-                Ports = { new ServerPort(TestHelpers.Host, TestHelpers.Port, TestHelpers.Credentials) }
+                Ports = { new ServerPort(testRunValues.Host, testRunValues.Port, testRunValues.ServerCredentials) }
             };
             _server.Start();
-            _client = new SampleServiceClient(new Channel(TestHelpers.HostAddress, TestHelpers.ClientCredentials));
+            _channel = new Channel(testRunValues.HostAddress, testRunValues.ClientCredentials);
+            _client = new SampleServiceClient(_channel);
         }
 
 
@@ -42,6 +45,7 @@ namespace CodingMilitia.GrpcExtensions.Tests
         public void Dispose()
         {
             _server.ShutdownAsync().GetAwaiter().GetResult();
+            _channel.ShutdownAsync().GetAwaiter().GetResult();
         }
     }
 }

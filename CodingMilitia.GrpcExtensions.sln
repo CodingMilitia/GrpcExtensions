@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodingMilitia.GrpcExtension
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodingMilitia.GrpcExtensions.ScopedRequestHandlerClientSample", "samples\CodingMilitia.GrpcExtensions.ScopedRequestHandlerClientSample\CodingMilitia.GrpcExtensions.ScopedRequestHandlerClientSample.csproj", "{C0D51761-F50F-404C-9380-F86EB54E13EF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{C24DB107-644E-433B-8F17-C4E869C92DA3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodingMilitia.GrpcExtensions.Tests", "tests\CodingMilitia.GrpcExtensions.Tests\CodingMilitia.GrpcExtensions.Tests.csproj", "{FC289A20-B165-47E5-A163-AB96ED58344E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -76,11 +80,24 @@ Global
 		{C0D51761-F50F-404C-9380-F86EB54E13EF}.Release|x64.Build.0 = Release|Any CPU
 		{C0D51761-F50F-404C-9380-F86EB54E13EF}.Release|x86.ActiveCfg = Release|Any CPU
 		{C0D51761-F50F-404C-9380-F86EB54E13EF}.Release|x86.Build.0 = Release|Any CPU
+		{FC289A20-B165-47E5-A163-AB96ED58344E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC289A20-B165-47E5-A163-AB96ED58344E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC289A20-B165-47E5-A163-AB96ED58344E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FC289A20-B165-47E5-A163-AB96ED58344E}.Debug|x64.Build.0 = Debug|Any CPU
+		{FC289A20-B165-47E5-A163-AB96ED58344E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FC289A20-B165-47E5-A163-AB96ED58344E}.Debug|x86.Build.0 = Debug|Any CPU
+		{FC289A20-B165-47E5-A163-AB96ED58344E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC289A20-B165-47E5-A163-AB96ED58344E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC289A20-B165-47E5-A163-AB96ED58344E}.Release|x64.ActiveCfg = Release|Any CPU
+		{FC289A20-B165-47E5-A163-AB96ED58344E}.Release|x64.Build.0 = Release|Any CPU
+		{FC289A20-B165-47E5-A163-AB96ED58344E}.Release|x86.ActiveCfg = Release|Any CPU
+		{FC289A20-B165-47E5-A163-AB96ED58344E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A05A3991-0296-41F4-BD2E-112E883A7EA9} = {9CC401EE-5B33-460C-B78E-B98A1729D7C3}
 		{4CF89B46-795C-4CC2-B880-96211274BCC0} = {7D84B15E-2DC4-42CF-B9A1-90AD90BB53C8}
 		{1262247D-E0B8-486C-B6AA-C8F695846924} = {9CC401EE-5B33-460C-B78E-B98A1729D7C3}
 		{C0D51761-F50F-404C-9380-F86EB54E13EF} = {9CC401EE-5B33-460C-B78E-B98A1729D7C3}
+		{FC289A20-B165-47E5-A163-AB96ED58344E} = {C24DB107-644E-433B-8F17-C4E869C92DA3}
 	EndGlobalSection
 EndGlobal

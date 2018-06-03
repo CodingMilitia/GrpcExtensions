@@ -18,10 +18,10 @@ namespace CodingMilitia.GrpcExtensions.Tests
             _server = new Server
             {
                 Services = { BindService(new DumbPipeServiceImplementation(new EchoValueService())) },
-                Ports = { new ServerPort("127.0.0.1", 1234, ServerCredentials.Insecure) }
+                Ports = { new ServerPort(TestHelpers.Host, TestHelpers.Port, TestHelpers.Credentials) }
             };
             _server.Start();
-            _client = new SampleServiceClient(new Channel("127.0.0.1:1234", ChannelCredentials.Insecure));
+            _client = new SampleServiceClient(new Channel(TestHelpers.HostAddress, TestHelpers.Credentials));
         }
 
 

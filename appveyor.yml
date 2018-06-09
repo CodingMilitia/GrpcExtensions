@@ -7,7 +7,7 @@ environment:
   # Don't report back to the mothership
   DOTNET_CLI_TELEMETRY_OPTOUT: 1
 build_script:
-- cmd: powershell -Command .\build.ps1
+- cmd: powershell -Command .\build.ps1 --nugetApiKey=%NUGET_API_KEY%
 test_script:
 - cmd: echo "test_script -> NOOP (tests are performed in cake script)"
 after_test:

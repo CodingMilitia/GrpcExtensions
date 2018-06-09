@@ -7,6 +7,8 @@ var project = "./src/CodingMilitia.GrpcExtensions.Hosting/CodingMilitia.GrpcExte
 var testProject = "./tests/CodingMilitia.GrpcExtensions.Tests/CodingMilitia.GrpcExtensions.Tests.csproj";
 var currentBranch = GitBranchCurrent("./").FriendlyName;
 var isReleaseBuild = currentBranch == "master";
+var configuration = "Release";
+var nugetApiKey = Argument<string>("nugetApiKey", null);
 
 
 Task("Clean")
@@ -37,7 +39,7 @@ Task("Build")
             solutionPath,
             new DotNetCoreBuildSettings 
             {
-                Configuration = "Release"
+                Configuration = configuration
             }
         );
     });
@@ -54,10 +56,25 @@ Task("Package")
         PackageProject("CodingMilitia.GrpcExtensions.Hosting", project, artifactsDir);
     });
 
+Task("Publish")
+    .IsDependentOn("Package")
+    .Does(() => {
+        var pushSettings = new NuGetPushSettings 
+        {
+                ApiKey = nugetApiKey
+        };
+
+        var pkgs = GetFiles(artifactsDir + "*.nupkg");
+        foreach(var pkg in pkgs) 
+        {
+            NuGetPush(pkg, pushSettings);
+        }
+    });
+
 if(isReleaseBuild)
 {
     Task("Default")
-        .IsDependentOn("Package");
+        .IsDependentOn("Publish");
 }
 else
 {

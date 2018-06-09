@@ -67,7 +67,7 @@ Task("Publish")
         var pkgs = GetFiles(artifactsDir + "*.nupkg");
         foreach(var pkg in pkgs) 
         {
-            DotNetCoreNuGetPush(pkg, pushSettings);
+            DotNetCoreNuGetPush(pkg.FullPath, pushSettings);
         }
     });
 

@@ -58,7 +58,7 @@ Task("Package")
 Task("Publish")
     .IsDependentOn("Package")
     .Does(() => {
-        var pushSettings = new NuGetPushSettings 
+        var pushSettings = new DotNetCoreNuGetPushSettings 
         {
             Source = "https://api.nuget.org/v3/index.json",
             ApiKey = nugetApiKey
@@ -67,7 +67,7 @@ Task("Publish")
         var pkgs = GetFiles(artifactsDir + "*.nupkg");
         foreach(var pkg in pkgs) 
         {
-            NuGetPush(pkg, pushSettings);
+            DotNetCoreNuGetPush(pkg, pushSettings);
         }
     });
 

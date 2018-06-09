@@ -5,8 +5,8 @@ var artifactsDir = "./artifacts/";
 var solutionPath = "./CodingMilitia.GrpcExtensions.sln";
 var project = "./src/CodingMilitia.GrpcExtensions.Hosting/CodingMilitia.GrpcExtensions.Hosting.csproj";
 var testProject = "./tests/CodingMilitia.GrpcExtensions.Tests/CodingMilitia.GrpcExtensions.Tests.csproj";
-var currentBranch = GitBranchCurrent("./").FriendlyName;
-var isReleaseBuild = currentBranch == "master";
+var currentBranch = Argument<string>("currentBranch", GitBranchCurrent("./").FriendlyName);
+var isReleaseBuild = string.Equals(currentBranch, "master", StringComparison.OrdinalIgnoreCase);
 var configuration = "Release";
 var nugetApiKey = Argument<string>("nugetApiKey", null);
 

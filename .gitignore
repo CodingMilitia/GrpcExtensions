@@ -323,3 +323,5 @@ ASALocalRun/
 
 #MacOS stuff
 .DS_Store
+
+tools/

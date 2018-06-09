@@ -1,4 +1,7 @@
 #addin Cake.Git
+#addin nuget:?package=Nuget.Core
+
+using NuGet;
 
 var target = Argument("target", "Default");
 var artifactsDir = "./artifacts/";
@@ -9,6 +12,8 @@ var currentBranch = Argument<string>("currentBranch", GitBranchCurrent("./").Fri
 var isReleaseBuild = string.Equals(currentBranch, "master", StringComparison.OrdinalIgnoreCase);
 var configuration = "Release";
 var nugetApiKey = Argument<string>("nugetApiKey", null);
+var nugetSource = "https://api.nuget.org/v3/index.json";
+
 
 Task("Clean")
     .Does(() => {
@@ -60,14 +65,22 @@ Task("Publish")
     .Does(() => {
         var pushSettings = new DotNetCoreNuGetPushSettings 
         {
-            Source = "https://api.nuget.org/v3/index.json",
+            Source = nugetSource,
             ApiKey = nugetApiKey
         };
 
         var pkgs = GetFiles(artifactsDir + "*.nupkg");
         foreach(var pkg in pkgs) 
         {
-            DotNetCoreNuGetPush(pkg.FullPath, pushSettings);
+            if(!IsNuGetPublished(pkg)) 
+            {
+                Information($"Publishing \"{pkg}\".");
+                DotNetCoreNuGetPush(pkg.FullPath, pushSettings);
+            }
+            else {
+                Information($"Bypassing publishing \"{pkg}\" as it is already published.");
+            }
+            
         }
     });
 
@@ -95,4 +108,18 @@ private void PackageProject(string projectName, string projectPath, string outpu
         };
 
     DotNetCorePack(projectPath, settings);
-}    
+}
+
+private bool IsNuGetPublished(FilePath packagePath) {
+    var package = new ZipPackage(packagePath.FullPath);
+
+    var latestPublishedVersions = NuGetList(
+        package.Id,
+        new NuGetListSettings 
+        {
+            Prerelease = true
+        }
+    );
+
+    return latestPublishedVersions.Any(p => package.Version.Equals(new SemanticVersion(p.Version)));
+}

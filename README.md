@@ -9,6 +9,7 @@ Trying to simplify dependency injection configuration and stuff like that, witho
 ||master|develop|
 |---|---|---|
 |AppVeyor|[![Build status](https://ci.appveyor.com/api/projects/status/x6h46pdlok12duwk/branch/master?svg=true)](https://ci.appveyor.com/project/joaofbantunes/grpcextensions)|[![Build status](https://ci.appveyor.com/api/projects/status/x6h46pdlok12duwk/branch/develop?svg=true)](https://ci.appveyor.com/project/joaofbantunes/grpcextensions)|
+|Travis CI|[![Build Status](https://travis-ci.org/CodingMilitia/GrpcExtensions.svg?branch=master)](https://travis-ci.org/CodingMilitia/GrpcExtensions)|[![Build Status](https://travis-ci.org/CodingMilitia/GrpcExtensions.svg?branch=develop)](https://travis-ci.org/CodingMilitia/GrpcExtensions)|
 
 ## Sample
 Just a quick sample, for a bit more detail check the samples folder.

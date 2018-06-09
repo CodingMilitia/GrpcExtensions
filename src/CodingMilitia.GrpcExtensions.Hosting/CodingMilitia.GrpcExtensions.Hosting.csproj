@@ -2,6 +2,19 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <VersionPrefix>0.0.1</VersionPrefix>
+    <VersionSuffix>alpha</VersionSuffix>
+
+  </PropertyGroup>
+
+  <PropertyGroup>
+      <OutputType>library</OutputType>
+      <Authors>Coding Militia</Authors>
+      <Description>Some extensions to ease development of gRPC services in .NET</Description>
+      <PackageLicenseUrl>https://raw.githubusercontent.com/CodingMilitia/GrpcExtensions/master/LICENSE</PackageLicenseUrl>
+      <PackageProjectUrl>https://github.com/CodingMilitia/GrpcExtensions</PackageProjectUrl>
+      <RepositoryUrl>https://github.com/CodingMilitia/GrpcExtensions</RepositoryUrl>
+      <PackageTags>grpc dependency injection hosting</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

@@ -60,7 +60,8 @@ Task("Publish")
     .Does(() => {
         var pushSettings = new NuGetPushSettings 
         {
-                ApiKey = nugetApiKey
+            Source = "https://api.nuget.org/v3/index.json",
+            ApiKey = nugetApiKey
         };
 
         var pkgs = GetFiles(artifactsDir + "*.nupkg");

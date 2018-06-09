@@ -13,7 +13,13 @@ Task("Clean")
     .Does(() => {
         if (DirectoryExists(artifactsDir))
         {
-            DeleteDirectory(artifactsDir, recursive:true);
+            DeleteDirectory(
+                artifactsDir, 
+                new DeleteDirectorySettings {
+                    Recursive = true,
+                    Force = true
+                }
+            );
         }
         CreateDirectory(artifactsDir);
     });
@@ -27,11 +33,12 @@ Task("Build")
     .IsDependentOn("Clean")
     .IsDependentOn("Restore")
     .Does(() => {
-        DotNetCoreBuild(solutionPath,
-                new DotNetCoreBuildSettings 
-                {
-                    Configuration = "Release"
-                }
+        DotNetCoreBuild(
+            solutionPath,
+            new DotNetCoreBuildSettings 
+            {
+                Configuration = "Release"
+            }
         );
     });
 

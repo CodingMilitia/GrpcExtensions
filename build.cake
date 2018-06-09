@@ -10,7 +10,6 @@ var isReleaseBuild = currentBranch == "master";
 var configuration = "Release";
 var nugetApiKey = Argument<string>("nugetApiKey", null);
 
-
 Task("Clean")
     .Does(() => {
         if (DirectoryExists(artifactsDir))
@@ -73,11 +72,13 @@ Task("Publish")
 
 if(isReleaseBuild)
 {
+    Information("Release build");
     Task("Default")
         .IsDependentOn("Publish");
 }
 else
 {
+    Information("Development build");
     Task("Default")
         .IsDependentOn("Test");
 }

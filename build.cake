@@ -84,6 +84,7 @@ Task("Publish")
         }
     });
 
+Information('Current branch: ' + currentBranch);
 if(isReleaseBuild)
 {
     Information("Release build");

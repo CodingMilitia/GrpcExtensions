@@ -9,6 +9,6 @@ environment:
   NUGET_API_KEY:
     secure: tQXopKGxbH8TK83YCogoAl3c9AeZmfFgl4I/k2ajOGMORcdtfs1FNbfUwvFTznUC
 build_script:
-- ps: .\build.ps1 --currentBranch=%APPVEYOR_REPO_BRANCH% --nugetApiKey=%NUGET_API_KEY%
+- ps: .\build.ps1 --currentBranch=$env:APPVEYOR_REPO_BRANCH --nugetApiKey=$env:NUGET_API_KEY
 test: off #tests handled by cake script
 deploy: off #deploy handled by cake script

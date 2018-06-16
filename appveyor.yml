@@ -6,9 +6,9 @@ branches:
 environment:
   DOTNET_CLI_TELEMETRY_OPTOUT: 1
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  NUGET_API_KEY:
+    secure: tQXopKGxbH8TK83YCogoAl3c9AeZmfFgl4I/k2ajOGMORcdtfs1FNbfUwvFTznUC
 build_script:
-- cmd: powershell -Command .\build.ps1 --currentBranch=%APPVEYOR_REPO_BRANCH% --nugetApiKey=%NUGET_API_KEY%
-test_script:
-- cmd: echo "test_script -> NOOP (tests are performed in cake script)"
-after_test:
-- cmd: echo "after_test -> NOOP (packaging is performed in cake script)"
+- ps: .\build.ps1 --currentBranch=%APPVEYOR_REPO_BRANCH% --nugetApiKey=%NUGET_API_KEY%
+test: off #tests handled by cake script
+deploy: off #deploy handled by cake script

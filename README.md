@@ -14,7 +14,7 @@ Trying to simplify dependency injection configuration and stuff like that, witho
 ## Coverage status
 
 |master|develop|
-|---|---|---|
+|---|---|
 |[![Coverage Status](https://coveralls.io/repos/github/CodingMilitia/GrpcExtensions/badge.svg?branch=master)](https://coveralls.io/github/CodingMilitia/GrpcExtensions?branch=develop)|[![Coverage Status](https://coveralls.io/repos/github/CodingMilitia/GrpcExtensions/badge.svg?branch=develop)](https://coveralls.io/github/CodingMilitia/GrpcExtensions?branch=develop)|
 
 

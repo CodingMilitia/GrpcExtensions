@@ -8,7 +8,9 @@ environment:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
   NUGET_API_KEY:
     secure: tQXopKGxbH8TK83YCogoAl3c9AeZmfFgl4I/k2ajOGMORcdtfs1FNbfUwvFTznUC
+  COVERALLS_TOKEN:
+    secure: 8Jc5l9jq4U44ds5CrF647bocwBRdV44FSQOsIe8CfD/0amEV3GHaCEtHHrtuX51S
 build_script:
-- ps: .\build.ps1 --currentBranch=$env:APPVEYOR_REPO_BRANCH --nugetApiKey=$env:NUGET_API_KEY
+- ps: .\build.ps1 --currentBranch=$env:APPVEYOR_REPO_BRANCH --nugetApiKey=$env:NUGET_API_KEY --coverallsToken=$env:COVERALLS_TOKEN
 test: off #tests handled by cake script
 deploy: off #deploy handled by cake script

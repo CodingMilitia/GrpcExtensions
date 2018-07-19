@@ -70,12 +70,9 @@ Task("UploadCoverage")
     .IsDependentOn("Test")
     .Does(() =>
     {
-        Information("coverallsToken: " + coverallsToken);
-        Information("coverageResultsFilePath: " + artifactsDir + coverageResultsFileName);
         CoverallsIo(artifactsDir + coverageResultsFileName, new CoverallsIoSettings()
         {
-            RepoToken = coverallsToken,
-            Debug = true
+            RepoToken = coverallsToken
         });
     });
 

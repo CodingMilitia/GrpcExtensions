@@ -13,4 +13,4 @@ env:
 mono: latest
 dotnet: 2.1.300
 script:
-- ./build.sh --target "Test" --currentBranch=$TRAVIS_BRANCH
+- ./build.sh --target "BuildAndTest" --currentBranch=$TRAVIS_BRANCH

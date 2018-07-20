@@ -5,6 +5,11 @@
 
 using NuGet;
 
+
+//////////////////////////////////////////////////////
+//      CONSTANTS AND ENVIRONMENT VARIABLES         //
+//////////////////////////////////////////////////////
+
 var target = Argument("target", "Default");
 var artifactsDir = "./artifacts/";
 var solutionPath = "./CodingMilitia.GrpcExtensions.sln";
@@ -19,6 +24,9 @@ var nugetApiKey = Argument<string>("nugetApiKey", null);
 var coverallsToken = Argument<string>("coverallsToken", null);
 var nugetSource = "https://api.nuget.org/v3/index.json";
 
+//////////////////////////////////////////////////////
+//                     TASKS                        //
+//////////////////////////////////////////////////////
 
 Task("Clean")
     .Does(() => {
@@ -54,7 +62,6 @@ Task("Build")
     });
 
 Task("Test")
-    .IsDependentOn("Build")
     .Does(() => {
         var settings = new DotNetCoreTestSettings
         {
@@ -77,7 +84,6 @@ Task("UploadCoverage")
     });
 
 Task("Package")
-    .IsDependentOn("UploadCoverage")
     .Does(() => {
         PackageProject("CodingMilitia.GrpcExtensions.Hosting", project, artifactsDir);
     });
@@ -106,23 +112,51 @@ Task("Publish")
         }
     });
 
+//////////////////////////////////////////////////////
+//                     TARGETS                      //
+//////////////////////////////////////////////////////
+
+Task("BuildAndTest")
+    .IsDependentOn("Build")
+    .IsDependentOn("Test");
+
+Task("CompleteWithoutPublish")
+    .IsDependentOn("Build")
+    .IsDependentOn("Test")
+    .IsDependentOn("UploadCoverage");
+
 if(isReleaseBuild)
 {
-    Information("Release build");
-    Task("Default")
-        .IsDependentOn("Publish");
+    Task("Complete")
+        .IsDependentOn("Build")
+        .IsDependentOn("Test")
+        .IsDependentOn("UploadCoverage")
+        .IsDependentOn("Publish")
+        .Does(() => {
+            Information("Release build");
+        });
 }
 else
 {
-    Information("Development build");
-    Task("Default")
-        .IsDependentOn("UploadCoverage");
+    Task("Complete")
+        .IsDependentOn("Build")
+        .IsDependentOn("Test")
+        .IsDependentOn("UploadCoverage")
+        .Does(() => {
+            Information("Development build");
+        });
 }
+
+Task("Default")
+    .IsDependentOn("Complete");
+
 
 RunTarget(target);
 
 
-//Helpers
+//////////////////////////////////////////////////////
+//                      HELPERS                     //
+//////////////////////////////////////////////////////
 private void PackageProject(string projectName, string projectPath, string outputDirectory)
 {
     var settings = new DotNetCorePackSettings

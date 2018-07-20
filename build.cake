@@ -127,24 +127,20 @@ Task("CompleteWithoutPublish")
 
 if(isReleaseBuild)
 {
+    Information("Release build");
     Task("Complete")
         .IsDependentOn("Build")
         .IsDependentOn("Test")
         .IsDependentOn("UploadCoverage")
-        .IsDependentOn("Publish")
-        .Does(() => {
-            Information("Release build");
-        });
+        .IsDependentOn("Publish");
 }
 else
 {
+    Information("Development build");
     Task("Complete")
         .IsDependentOn("Build")
         .IsDependentOn("Test")
-        .IsDependentOn("UploadCoverage")
-        .Does(() => {
-            Information("Development build");
-        });
+        .IsDependentOn("UploadCoverage");
 }
 
 Task("Default")

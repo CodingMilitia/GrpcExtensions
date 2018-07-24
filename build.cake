@@ -41,6 +41,7 @@ Task("Clean")
             );
         }
         CreateDirectory(artifactsDir);
+        DotNetCoreClean(solutionPath);
     });
 
 Task("Restore")
@@ -85,7 +86,12 @@ Task("UploadCoverage")
 
 Task("Package")
     .Does(() => {
-        PackageProject("CodingMilitia.GrpcExtensions.Hosting", project, artifactsDir);
+        var settings = new DotNetCorePackSettings
+        {
+            OutputDirectory = artifactsDir,
+            NoBuild = true
+        };
+        DotNetCorePack(project, settings);
     });
 
 Task("Publish")
@@ -153,16 +159,6 @@ RunTarget(target);
 //////////////////////////////////////////////////////
 //                      HELPERS                     //
 //////////////////////////////////////////////////////
-private void PackageProject(string projectName, string projectPath, string outputDirectory)
-{
-    var settings = new DotNetCorePackSettings
-        {
-            OutputDirectory = outputDirectory,
-            NoBuild = true
-        };
-
-    DotNetCorePack(projectPath, settings);
-}
 
 private bool IsNuGetPublished(FilePath packagePath) {
     var package = new ZipPackage(packagePath.FullPath);
